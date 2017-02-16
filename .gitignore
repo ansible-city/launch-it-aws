@@ -1,0 +1,18 @@
+##
+# IDEs, text editors
+*.swp
+*.sublime*
+.idea
+*.iml
+.DS_Store
+.project
+/.settings
+
+
+
+
+##
+# Build, etc
+/.venv
+*.retry
+/ansible/vendor

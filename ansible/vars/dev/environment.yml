@@ -1,0 +1,5 @@
+---
+
+aws_foundation:
+  nat:
+    availability_zones: single

@@ -1,0 +1,20 @@
+---
+
+- name: AWS Foundation
+  hosts: "{{ hosts }}"
+  gather_facts: no
+
+  roles:
+    - role: ansible-city.aws_foundation
+      aws_foundation:
+        stacks:
+          - nat
+        nat:
+          state: absent
+
+    - role: ansible-city.aws_foundation
+      aws_foundation:
+        stacks:
+          - vpc
+        vpc:
+          state: absent

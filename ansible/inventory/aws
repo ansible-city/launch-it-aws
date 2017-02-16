@@ -1,0 +1,37 @@
+#!/bin/bash
+
+##
+# Generates simple inventory for given ROLE and ENVIRONEMNT.
+# For 'ssh' role this script will use public IP addresses.
+#
+# Usage:
+#   ROLE=api_shopper ENV=dev ansible/inventory/aws.sh
+#
+# Use with ansible:
+#   ROLE=api_shopper \
+#   ENV=dev \
+#   ansible-playbook \
+#     -i ansible/inventory/aws.sh
+#     ...
+#
+
+ACCESS="Private"
+
+if [[ "ssh" == ${ROLE} || "bastion" == ${ROLE} ]]; then
+	ACCESS="Public"
+fi
+
+EXTRA_FILTERS=""
+
+if [[ "all" != ${ROLE} ]]; then
+	EXTRA_FILTERS="Name=tag:role,Values=${ROLE}"
+fi
+
+aws ec2 describe-instances \
+	--region eu-west-1 \
+	--filters \
+		Name=instance-state-name,Values=running \
+		Name=tag:environment,Values=${ENV} \
+		$EXTRA_FILTERS \
+	--output json \
+	--query "Reservations[*].Instances[*].${ACCESS}IpAddress | [] | {${ENV}:{hosts:[]},${ROLE}:{hosts:[]}}"
